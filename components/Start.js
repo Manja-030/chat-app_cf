@@ -5,6 +5,7 @@ import {
   Image,
   View,
   KeyboardAvoidingView,
+  Platform,
   Text,
   TextInput,
   Pressable,
@@ -34,12 +35,12 @@ export default class Start extends React.Component {
 
   render() {
     return (
-      <ImageBackground source={Background} style={styles.image}>
-        <View style={styles.titleWrapper}>
-          <Text style={styles.title}>inTouch</Text>
-        </View>
+      <View style={{ flex: 1 }}>
+        <ImageBackground source={Background} style={styles.image}>
+          <View style={styles.titleWrapper}>
+            <Text style={styles.title}>inTouch</Text>
+          </View>
 
-        <KeyboardAvoidingView behavior="padding" style={styles.whiteBoxWrapper}>
           <View style={styles.whiteBox}>
             {/*user name will be passed as prop to chat screen*/}
             <View style={styles.inputBox}>
@@ -54,27 +55,48 @@ export default class Start extends React.Component {
             {/* Allows user to pick a background color for the chat screen */}
             <View style={styles.colorWrapper}>
               <Text style={styles.colorText}>Choose Background Color:</Text>
-              <View style={styles.circleRow}>
+              <View
+                style={styles.circleRow}
+                accessible={true}
+                accessibilityLabel="menu"
+                accessibilityHint="Allows to pick a color scheme for the chat page"
+              >
                 <TouchableOpacity
                   style={[{ backgroundColor: 'black' }, styles.circle]}
                   onPress={() => this.changeChatColor(this.colors.black)}
+                  accessibilityLabel="black"
+                  accessibilityHint="choose black background for chat page"
+                  accessibilityRole="button"
                 ></TouchableOpacity>
                 <TouchableOpacity
                   style={[{ backgroundColor: 'purple' }, styles.circle]}
                   onPress={() => this.changeChatColor(this.colors.purple)}
+                  accessibilityLabel="purple"
+                  accessibilityHint="choose purple background for chat page"
+                  accessibilityRole="button"
                 ></TouchableOpacity>
                 <TouchableOpacity
                   style={[{ backgroundColor: 'grey' }, styles.circle]}
                   onPress={() => this.changeChatColor(this.colors.grey)}
+                  accessibilityLabel="grey"
+                  accessibilityHint="choose grey background for chat page"
+                  accessibilityRole="button"
                 ></TouchableOpacity>
                 <TouchableOpacity
                   style={[{ backgroundColor: 'green' }, styles.circle]}
                   onPress={() => this.changeChatColor(this.colors.green)}
+                  accessibilityLabel="green"
+                  accessibilityHint="choose green background for chat page"
+                  accessibilityRole="button"
                 ></TouchableOpacity>
               </View>
             </View>
-            {/* name and color are passed to chat screen */}
+            {/* Takes user to chat screen. Name and color are passed to chat screen */}
             <Pressable
+              accessible={true}
+              accessibilityLabel="Tap me"
+              accessibilityHint="Navigates to the chat page"
+              accessibilityRole="button"
               onPress={() =>
                 this.props.navigation.navigate('Chat', {
                   name: this.state.name,
@@ -86,8 +108,8 @@ export default class Start extends React.Component {
               <Text style={styles.buttonText}>Start Chatting</Text>
             </Pressable>
           </View>
-        </KeyboardAvoidingView>
-      </ImageBackground>
+        </ImageBackground>
+      </View>
     );
   }
 }
@@ -95,46 +117,45 @@ export default class Start extends React.Component {
 const styles = StyleSheet.create({
   image: {
     flex: 1,
+    flexDirection: 'column',
     resizeMode: 'contain',
     alignItems: 'center',
+    justifyContent: 'center',
   },
 
   titleWrapper: {
-    flex: 0.66,
+    height: '50%',
+    width: '100%',
+    alignItems: 'center',
+    paddingTop: '10%',
   },
   title: {
-    marginTop: 100,
     fontSize: 45,
     fontWeight: '600',
     color: '#FFFFFF',
   },
 
-  whiteBoxWrapper: {
-    flex: 0.44,
-    width: '88%',
-    marginBottom: '5%',
-  },
   whiteBox: {
-    justify: 'flex-end',
-    width: '100%',
-    height: '100%',
+    width: '88%',
+    height: '44%',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     justifyContent: 'space-evenly',
+  },
+
+  inputBox: {
+    flexDirection: 'row',
+    height: 60,
+    width: '88%',
+    borderColor: '#757083',
+    borderWidth: 1,
+    paddingHorizontal: 12,
   },
   nameIcon: {
     width: 20,
     height: 20,
     marginRight: 10,
     alignSelf: 'center',
-  },
-  inputBox: {
-    flexDirection: 'row',
-    height: 50,
-    width: '88%',
-    borderColor: '#757083',
-    borderWidth: 1,
-    paddingHorizontal: 12,
   },
   inputField: {
     fontSize: 16,
@@ -166,7 +187,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#757083',
     width: '88%',
-    height: 50,
+    height: 60,
     justifyContent: 'center',
     alignItems: 'center',
   },
