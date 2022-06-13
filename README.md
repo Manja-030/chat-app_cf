@@ -17,7 +17,8 @@ location.
 - [React Native](https://reactnative.dev/)
 - [Expo](https://expo.dev/)
 - [Gifted Chat](https://github.com/FaridSafi/react-native-gifted-chat)
-- Google Firestore Database
+- [Google Firestore Database](https://firebase.google.com/products/firestore?gclid=EAIaIQobChMImfDPy_Cp-AIVSJnVCh0zwAhsEAAYASAAEgIxevD_BwE&gclsrc=aw.ds)
+
 
 <!-- GETTING STARTED -->
 
