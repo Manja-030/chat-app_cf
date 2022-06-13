@@ -46,6 +46,11 @@ so that it can be displayed in the chat. */
     return (
       <Bubble
         {...props}
+        textStyle={{
+          right: {
+            color: 'black',
+          },
+        }}
         wrapperStyle={{
           right: {
             backgroundColor: 'pink',
