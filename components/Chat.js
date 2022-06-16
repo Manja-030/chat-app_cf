@@ -160,7 +160,9 @@ so that it can be displayed in the chat. */
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
-            _id: 1,
+            _id: this.state.user._id,
+            name: this.state.user.name,
+            avatar: this.state.user.avatar,
           }}
           showAvatarForEveryMessage={true}
         />
