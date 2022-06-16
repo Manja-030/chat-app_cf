@@ -5,7 +5,6 @@ import {
   Image,
   View,
   KeyboardAvoidingView,
-  Platform,
   Text,
   TextInput,
   Pressable,
@@ -35,12 +34,13 @@ export default class Start extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
         <ImageBackground source={Background} style={styles.image}>
-          <View style={styles.titleWrapper}>
-            <Text style={styles.title}>inTouch</Text>
-          </View>
-
+          <Text style={styles.title}>inTouch</Text>
+          <View style={styles.spacer}></View>
           <View style={styles.whiteBox}>
             {/*user name will be passed as prop to chat screen*/}
             <View style={styles.inputBox}>
@@ -109,35 +109,39 @@ export default class Start extends React.Component {
             </Pressable>
           </View>
         </ImageBackground>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  image: {
+  container: {
     flex: 1,
-    flexDirection: 'column',
-    resizeMode: 'contain',
-    alignItems: 'center',
     justifyContent: 'center',
   },
 
-  titleWrapper: {
-    height: '50%',
-    width: '100%',
-    alignItems: 'center',
-    paddingTop: '10%',
+  image: {
+    flex: 1,
+    resizeMode: 'cover',
+    //alignItems: 'center',
+    justifyContent: 'space-evenly',
   },
+
   title: {
     fontSize: 45,
     fontWeight: '600',
     color: '#FFFFFF',
+    textAlign: 'center',
+    marginTop: 100,
+  },
+
+  spacer: {
+    flex: 1,
   },
 
   whiteBox: {
-    width: '88%',
     height: '44%',
+    margin: '6%',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     justifyContent: 'space-evenly',
@@ -146,7 +150,10 @@ const styles = StyleSheet.create({
   inputBox: {
     flexDirection: 'row',
     height: 60,
+    //margin: '6%',
     width: '88%',
+    //marginTop: '6%',
+    //marginBottom: '6%',
     borderColor: '#757083',
     borderWidth: 1,
     paddingHorizontal: 12,
@@ -161,12 +168,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '300',
     color: '#757083',
-    opacity: 0.5,
+    //opacity: 0.5,
   },
 
   colorWrapper: {
+    //flex: 1,
     width: '88%',
     justifyContent: 'flex-start',
+    //margin: '6%',
   },
   colorText: {
     fontSize: 16,
@@ -181,13 +190,15 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-
     marginRight: 20,
   },
   button: {
+    //flex: 1,
     backgroundColor: '#757083',
     width: '88%',
     height: 60,
+    // marginTop: '6%',
+    //marginBottom: '6%',
     justifyContent: 'center',
     alignItems: 'center',
   },
