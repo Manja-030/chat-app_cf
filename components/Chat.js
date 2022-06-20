@@ -54,6 +54,7 @@ export default class Chat extends React.Component {
         _id: data._id,
         text: data.text,
         createdAt: data.createdAt.toDate(),
+        uid: data.uid, // ERGÄNZT
         user: {
           _id: data.user._id,
           name: data.user.name,
@@ -143,13 +144,13 @@ export default class Chat extends React.Component {
                 avatar: 'https://placeimg.com/140/140/any',
               },
             });
-
+            /*
             // create reference to active user's messages
             this.referenceMessagesUser = firebase
               .firestore()
               .collection('messages')
               .where('uid', '==', this.state.uid);
-
+*/
             this.unsubscribeMessages = this.referenceChatMessages
               .orderBy('createdAt', 'desc')
               .onSnapshot(this.onCollectionUpdate);
