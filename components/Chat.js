@@ -40,34 +40,8 @@ export default class Chat extends React.Component {
 
     //create reference to the messages collection in the database:
     this.referenceChatMessages = firebase.firestore().collection('messages');
-    //this.referenceMessagesUser = null;
+    this.referenceMessagesUser = null;
   }
-
-  // allows user to see new messages when database updates
-  onCollectionUpdate = (querySnapshot) => {
-    const messages = [];
-    // go through each document
-    querySnapshot.forEach((doc) => {
-      // get the QueryDocumentSnapshot's data
-      var data = doc.data();
-      messages.push({
-        _id: data._id,
-        text: data.text,
-        createdAt: data.createdAt.toDate(),
-        user: {
-          _id: data.user._id,
-          name: data.user.name,
-          avatar: data.user.avatar,
-        },
-      });
-    });
-    this.setState({
-      messages: messages,
-    });
-
-    this.saveMessagesOffline();
-  };
-
   //function to get messages from asyncStorage
   async getMessages() {
     let messages = '';
@@ -86,38 +60,11 @@ export default class Chat extends React.Component {
     }
   }
 
-  //function to save messages in the asyncStorage
-  async saveMessagesOffline() {
-    try {
-      await AsyncStorage.setItem(
-        'messages',
-        JSON.stringify(this.state.messages)
-      );
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-  //Delete stored messages. To get rid of test messages during development.
-  async deleteMessages() {
-    try {
-      await AsyncStorage.removeItem('messages');
-      this.setState({
-        messages: [],
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-
   componentDidMount() {
     // get name prop from user input on start screen and set page title
     const { name } = this.props.route.params;
     this.props.navigation.setOptions({ title: name });
-
-    NetInfo.fetch().then((state) => {
-      console.log('Connection type', state.type);
-      console.log('Is connected?', state.isConnected);
-    });
+    this.getMessages();
 
     // Find out if user is online or offline and tell app what to do when online/offline.
     NetInfo.fetch().then((connection) => {
@@ -153,30 +100,50 @@ export default class Chat extends React.Component {
             this.unsubscribeMessages = this.referenceChatMessages
               .orderBy('createdAt', 'desc')
               .onSnapshot(this.onCollectionUpdate);
+
             //save messages when user is online
             this.saveMessagesOffline();
           });
       } else {
         this.setState({ isConnected: false });
+
         console.log('offline');
-        //load the messages from asyncStorage
         this.getMessages();
       }
     });
+  }
 
-    /* !!!!! Diesen Teil wiederholt er. War schonmal über ComponentDidMount */
-
-    // Reference to load messages via Firebase
-    // this.referenceChatMessages = firebase.firestore().collection("messages");
-
-    /*!!!!!!!!!!!!!!!!!!!!!!!*/
+  //function to save messages in the asyncStorage
+  async saveMessagesOffline() {
+    try {
+      await AsyncStorage.setItem(
+        'messages',
+        JSON.stringify(this.state.messages)
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+  //Delete stored messages. To get rid of test messages during development.
+  async deleteMessages() {
+    try {
+      await AsyncStorage.removeItem('messages');
+      this.setState({
+        messages: [],
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   componentWillUnmount() {
     //stop listening for changes
-
-    this.authUnsubscribe();
-    this.unsubscribeMessages();
+    NetInfo.fetch().then((connection) => {
+      if (connection.isConnected) {
+        this.authUnsubscribe();
+        this.unsubscribeMessages();
+      }
+    });
   }
 
   // Add new messages to the firebase messages collection
@@ -185,10 +152,10 @@ export default class Chat extends React.Component {
     this.referenceChatMessages.add({
       uid: this.state.uid,
       _id: message._id,
-      text: message.text,
+      text: message.text || '',
       createdAt: message.createdAt,
-      user: this.state.user,
-      //user: message.user,
+      //user: this.state.user,
+      user: message.user,
     });
   }
   /* The message a user has just sent gets appended to the state messages 
@@ -204,6 +171,31 @@ export default class Chat extends React.Component {
       }
     );
   }
+
+  // allows user to see new messages when database updates
+  onCollectionUpdate = (querySnapshot) => {
+    const messages = [];
+    // go through each document
+    querySnapshot.forEach((doc) => {
+      // get the QueryDocumentSnapshot's data
+      var data = doc.data();
+      messages.push({
+        _id: data._id,
+        text: data.text,
+        createdAt: data.createdAt.toDate(),
+        user: {
+          _id: data.user._id,
+          name: data.user.name,
+          avatar: data.user.avatar,
+        },
+      });
+    });
+    this.setState({
+      messages: messages,
+    });
+
+    this.saveMessagesOffline();
+  };
 
   // Customize color of the sender's chat bubble
   renderBubble(props) {
@@ -235,7 +227,9 @@ export default class Chat extends React.Component {
   // render components
   render() {
     //background color chosen in Start screen is set as const background
-    const { chatColor } = this.props.route.params;
+    const { name, chatColor } = this.props.route.params;
+    //console.log(this.state.uid);
+    console.log(this.state.messages);
 
     return (
       <View
@@ -252,7 +246,7 @@ export default class Chat extends React.Component {
           onSend={(messages) => this.onSend(messages)}
           user={{
             _id: this.state.user._id,
-            name: this.state.user.name,
+            name: name,
             avatar: this.state.user.avatar,
           }}
           showAvatarForEveryMessage={true}
