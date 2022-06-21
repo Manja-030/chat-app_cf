@@ -40,7 +40,6 @@ export default class Chat extends React.Component {
 
     //create reference to the messages collection in the database:
     this.referenceChatMessages = firebase.firestore().collection('messages');
-    this.referenceMessagesUser = null;
   }
   //function to get messages from asyncStorage
   async getMessages() {
@@ -61,9 +60,12 @@ export default class Chat extends React.Component {
   }
 
   componentDidMount() {
-    // get name prop from user input on start screen and set page title
+    console.log(this.state.messages);
+    // get name prop from user input on start screen
     const { name } = this.props.route.params;
+    // set the title of the chat screen to user's name
     this.props.navigation.setOptions({ title: name });
+    // load messages from asyncStorage
     this.getMessages();
 
     // Find out if user is online or offline and tell app what to do when online/offline.
@@ -91,12 +93,6 @@ export default class Chat extends React.Component {
               },
             });
 
-            // create reference to active user's messages
-            this.referenceMessagesUser = firebase
-              .firestore()
-              .collection('messages')
-              .where('uid', '==', this.state.uid);
-
             this.unsubscribeMessages = this.referenceChatMessages
               .orderBy('createdAt', 'desc')
               .onSnapshot(this.onCollectionUpdate);
@@ -108,7 +104,6 @@ export default class Chat extends React.Component {
         this.setState({ isConnected: false });
 
         console.log('offline');
-        this.getMessages();
       }
     });
   }
@@ -140,8 +135,8 @@ export default class Chat extends React.Component {
     //stop listening for changes
     NetInfo.fetch().then((connection) => {
       if (connection.isConnected) {
-        this.authUnsubscribe();
         this.unsubscribeMessages();
+        this.authUnsubscribe();
       }
     });
   }
@@ -229,7 +224,6 @@ export default class Chat extends React.Component {
     //background color chosen in Start screen is set as const background
     const { name, chatColor } = this.props.route.params;
     //console.log(this.state.uid);
-    console.log(this.state.messages);
 
     return (
       <View
