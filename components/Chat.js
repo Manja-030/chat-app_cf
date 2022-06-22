@@ -96,13 +96,10 @@ export default class Chat extends React.Component {
             this.unsubscribeMessages = this.referenceChatMessages
               .orderBy('createdAt', 'desc')
               .onSnapshot(this.onCollectionUpdate);
-
-            //save messages when user is online
-            this.saveMessagesOffline();
           });
       } else {
         this.setState({ isConnected: false });
-
+        this.props.navigation.setOptions({ title: `${name} is Offline` });
         console.log('offline');
       }
     });
@@ -153,6 +150,7 @@ export default class Chat extends React.Component {
       user: message.user,
     });
   }
+
   /* The message a user has just sent gets appended to the state messages 
   so that it can be displayed in the chat. */
   onSend(messages = []) {
