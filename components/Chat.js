@@ -3,6 +3,8 @@ import { View, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
+//import CustomActions from './CustomActions';
+import { Constants, MapView, Location, Permissions } from 'expo';
 
 // import Firestore
 const firebase = require('firebase');
@@ -41,23 +43,6 @@ export default class Chat extends React.Component {
     //create reference to the messages collection in the database:
     this.referenceChatMessages = firebase.firestore().collection('messages');
   }
-  //function to get messages from asyncStorage
-  async getMessages() {
-    let messages = '';
-    try {
-      /*Read messages in storage. 
-        If there is no storage item with that key, messages are set to be empty*/
-      messages = (await AsyncStorage.getItem('messages')) || [];
-      //give messages the saved data
-      this.setState({
-        /* asyncStorage can only store strings. 
-          This converts the saved string back into a JSON object*/
-        messages: JSON.parse(messages),
-      });
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
 
   componentDidMount() {
     console.log(this.state.messages);
@@ -66,6 +51,7 @@ export default class Chat extends React.Component {
     // set the title of the chat screen to user's name
     this.props.navigation.setOptions({ title: name });
     // load messages from asyncStorage
+    this.getUser();
     this.getMessages();
 
     // Find out if user is online or offline and tell app what to do when online/offline.
@@ -96,11 +82,12 @@ export default class Chat extends React.Component {
             this.unsubscribeMessages = this.referenceChatMessages
               .orderBy('createdAt', 'desc')
               .onSnapshot(this.onCollectionUpdate);
+            this.saveMessagesOffline();
+            this.saveUserOffline();
           });
       } else {
         this.setState({ isConnected: false });
         this.props.navigation.setOptions({ title: `${name} is Offline` });
-        console.log('offline');
       }
     });
   }
@@ -116,6 +103,46 @@ export default class Chat extends React.Component {
       console.log(error.message);
     }
   }
+  //function to save user in the asyncStorage
+  async saveUserOffline() {
+    try {
+      await AsyncStorage.setItem('user', JSON.stringify(this.state.user));
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  //function to get messages from asyncStorage
+  async getMessages() {
+    let messages = '';
+    try {
+      /*Read messages in storage. 
+        If there is no storage item with that key, messages are set to be empty*/
+      messages = (await AsyncStorage.getItem('messages')) || [];
+      //give messages the saved data
+      this.setState({
+        /* asyncStorage can only store strings. 
+          This converts the saved string back into a JSON object*/
+        messages: JSON.parse(messages),
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  // ---get user from AsyncStorage
+  async getUser() {
+    let user = '';
+    try {
+      user = (await AsyncStorage.getItem('user')) || '';
+      this.setState({
+        user: JSON.parse(user),
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+
   //Delete stored messages. To get rid of test messages during development.
   async deleteMessages() {
     try {
@@ -188,6 +215,7 @@ export default class Chat extends React.Component {
     });
 
     this.saveMessagesOffline();
+    this.saveUserOffline();
   };
 
   // Customize color of the sender's chat bubble
@@ -216,6 +244,29 @@ export default class Chat extends React.Component {
       return <InputToolbar {...props} />;
     }
   }
+  /*
+  // creates button in the text input field
+  renderCustomActions = (props) => {
+    return <CustomActions {...props} />;
+  };
+
+  renderCustomView(props) {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{ width: 150, height: 100, borderRadius: 13, margin: 3 }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
+  }*/
 
   // render components
   render() {
@@ -234,6 +285,8 @@ export default class Chat extends React.Component {
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
+          renderActions={this.renderCustomActions}
+          renderCustomView={this.renderCustomView}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={{
