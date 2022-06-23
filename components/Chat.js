@@ -3,7 +3,7 @@ import { View, Text, KeyboardAvoidingView, Platform } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
-//import CustomActions from './CustomActions';
+import CustomActions from './CustomActions';
 import { Constants, MapView, Location, Permissions } from 'expo';
 
 // import Firestore
@@ -33,6 +33,8 @@ export default class Chat extends React.Component {
         avatar: '',
       },
       isConnected: false,
+      image: null,
+      location: null,
     };
 
     //connect to Firestore
@@ -175,6 +177,8 @@ export default class Chat extends React.Component {
       createdAt: message.createdAt,
       //user: this.state.user,
       user: message.user,
+      image: message.image || null,
+      location: message.location || null,
     });
   }
 
@@ -244,7 +248,7 @@ export default class Chat extends React.Component {
       return <InputToolbar {...props} />;
     }
   }
-  /*
+
   // creates button in the text input field
   renderCustomActions = (props) => {
     return <CustomActions {...props} />;
@@ -266,7 +270,7 @@ export default class Chat extends React.Component {
       );
     }
     return null;
-  }*/
+  }
 
   // render components
   render() {
