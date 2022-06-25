@@ -13,6 +13,10 @@ import {
 import Background from '../assets/background-image.png';
 import Icon from '../assets/person.png';
 
+import { LogBox } from 'react-native';
+
+LogBox.ignoreAllLogs(); //Hide warning notifications on expo front-end
+
 export default class Start extends React.Component {
   constructor(props) {
     super(props);
@@ -39,7 +43,7 @@ export default class Start extends React.Component {
         style={styles.container}
       >
         <ImageBackground source={Background} style={styles.image}>
-          <Text style={styles.title}>inTouch</Text>
+          <Text style={styles.title}>ChatWorld</Text>
           <View style={styles.spacer}></View>
           <View style={styles.whiteBox}>
             {/*user name will be passed as prop to chat screen*/}
