@@ -2,7 +2,7 @@
 
 This is a chat app for mobile devices I built with React Native. The app provides users with a chat interface and options to share photos and their
 location.
-<p align="center">
+<p align="left">
 <img height="350" src="https://user-images.githubusercontent.com/80778632/175761755-7ea418b2-e508-4200-8f6b-3b393cf7416c.PNG" >
 <img height="350" src="https://user-images.githubusercontent.com/80778632/175761751-a824c983-f013-4e73-9bc0-c4a91ae33f34.PNG" >
 <img height="350" src="https://user-images.githubusercontent.com/80778632/175763086-d26138fa-fed6-4d0d-bafd-7ed7329c920a.jpeg" >
