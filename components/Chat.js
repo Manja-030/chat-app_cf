@@ -4,7 +4,7 @@ import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 import CustomActions from './CustomActions';
-import { Constants, MapView, Location, Permissions } from 'expo';
+import MapView from 'react-native-maps';
 
 // import Firestore
 const firebase = require('firebase');
@@ -24,7 +24,7 @@ export default class Chat extends React.Component {
   constructor() {
     super();
     this.state = {
-      loggedInText: 'Just a moment, logging in...',
+      loggedInText: 'You are offline.',
       messages: [],
       uid: 0,
       user: {
@@ -51,7 +51,10 @@ export default class Chat extends React.Component {
     // get name prop from user input on start screen
     const { name } = this.props.route.params;
     // set the title of the chat screen to user's name
-    this.props.navigation.setOptions({ title: name });
+    this.props.navigation.setOptions({
+      title: `${name}'s ChatWorld`,
+    });
+
     // load messages from asyncStorage
     this.getUser();
     this.getMessages();
@@ -72,7 +75,7 @@ export default class Chat extends React.Component {
             //update user state with currently active user data
             this.setState({
               uid: user.uid,
-              loggedInText: 'Hello there.',
+              loggedInText: 'You are online. Ready to chat!',
               messages: [],
               user: {
                 _id: user.uid,
@@ -131,8 +134,7 @@ export default class Chat extends React.Component {
       console.log(error.message);
     }
   }
-
-  // ---get user from AsyncStorage
+  //function to get user from AsyncStorage
   async getUser() {
     let user = '';
     try {
@@ -212,6 +214,8 @@ export default class Chat extends React.Component {
           name: data.user.name,
           avatar: data.user.avatar,
         },
+        image: data.image || null,
+        location: data.location || null,
       });
     });
     this.setState({
@@ -253,7 +257,7 @@ export default class Chat extends React.Component {
   renderCustomActions = (props) => {
     return <CustomActions {...props} />;
   };
-
+  // render user's location
   renderCustomView(props) {
     const { currentMessage } = props;
     if (currentMessage.location) {
@@ -276,7 +280,6 @@ export default class Chat extends React.Component {
   render() {
     //background color chosen in Start screen is set as const background
     const { name, chatColor } = this.props.route.params;
-    //console.log(this.state.uid);
 
     return (
       <View
@@ -285,7 +288,7 @@ export default class Chat extends React.Component {
           backgroundColor: chatColor,
         }}
       >
-        <Text>{this.state.loggedInText}</Text>
+        <Text style={{ color: 'white' }}>{this.state.loggedInText}</Text>
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
@@ -299,6 +302,7 @@ export default class Chat extends React.Component {
             avatar: this.state.user.avatar,
           }}
           showAvatarForEveryMessage={true}
+          renderUsernameOnMessage={true}
         />
         {/* Prevent keyboard from overlapping text messages on some Android versions */}
         {Platform.OS === 'android' ? (
