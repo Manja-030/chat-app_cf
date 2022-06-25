@@ -1,6 +1,6 @@
 ## React Native Mobile Chat App
 
-This is a chat app for mobile devices I am building with React Native. The app will provide users with a chat interface and options to share images and their
+This is a chat app for mobile devices I built with React Native. The app provides users with a chat interface and options to share photos and their
 location.
 
 ### Features:
@@ -17,7 +17,7 @@ location.
 - [React Native](https://reactnative.dev/)
 - [Expo](https://expo.dev/)
 - [Gifted Chat](https://github.com/FaridSafi/react-native-gifted-chat)
-- Google Firestore Database
+- [Google Firebase](https://firebase.google.com)
 
 <!-- GETTING STARTED -->
 
