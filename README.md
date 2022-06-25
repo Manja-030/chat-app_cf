@@ -32,6 +32,14 @@ Follow these steps if you want to clone the project and build upon it yourself.
   ```sh
   npm install npm@latest -g
   ```
+### Set up Firebase
+
+Please refer to the [documentation](https://firebase.google.com).
+
+### Set up Expo
+
+Go to the Expo signup page [Expo signup page](https://expo.dev/) and follow the instructions to create an account.
+On your smartphone, go to your app store and download Expo app.
 
 ### Installation
 
@@ -52,3 +60,7 @@ Follow these steps if you want to clone the project and build upon it yourself.
 ```sh
    expo start
 ```
+### Load App
+With android phone: With the scanner in the Expo app scan the QR code provided by Expo in the terminal.
+With iPhone: Use the camera to scan the QR code.
+Alternatively, launch the project using an Android emulator or iOS simulator on your computer.
