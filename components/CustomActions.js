@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   ViewPropTypes,
 } from 'react-native';
-import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 
@@ -63,13 +62,13 @@ export default class CustomActions extends React.Component {
 
   getLocation = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
+
     try {
       if (status === 'granted') {
         const result = await Location.getCurrentPositionAsync({}).catch(
           (error) => console.log(error)
         );
-        //const longitude = JSON.stringify(result.coords.longitude);
-        //const altitude = JSON.stringify(result.coords.latitude);
+
         if (result) {
           this.props.onSend({
             location: {
@@ -131,13 +130,13 @@ export default class CustomActions extends React.Component {
       async (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            //console.log('user wants to pick an image');
+            console.log('user wants to pick an image');
             return this.pickPhoto();
           case 1:
-            // console.log('user wants to take a photo');
+            console.log('user wants to take a photo');
             return this.takePhoto();
           case 2:
-            //console.log('user wants to get their location');
+            console.log('user wants to get their location');
             return this.getLocation();
         }
       }
@@ -151,7 +150,7 @@ export default class CustomActions extends React.Component {
         onPress={this.onActionsPress}
         accessible={true}
         accessibilityLabel="More options"
-        accessibilityHint="Choose to send a pic or your geolocation."
+        accessibilityHint="Choose to send a pic or your location."
       >
         <View style={[styles.wrapper, this.props.wrapperStyle]}>
           <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
