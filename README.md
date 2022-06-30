@@ -35,6 +35,7 @@ Follow these steps if you want to clone the project and build upon it yourself.
   ```sh
   npm install npm@latest -g
   ```
+
 ### Set up Firebase
 
 Please refer to the [documentation](https://firebase.google.com).
@@ -63,7 +64,9 @@ On your smartphone, go to your app store and download Expo app.
 ```sh
    expo start
 ```
+
 ### Load Chat App
 On android phone: With the scanner in the Expo app scan the QR code provided by Expo in the terminal.
 On iPhone: Use the camera to scan the QR code.
 Alternatively you can launch the project using an Android emulator or iOS simulator on your computer.
+
